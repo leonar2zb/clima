@@ -1,6 +1,7 @@
 import axios from "axios"
 import { z } from 'zod'
 import { SearchType } from "../types"
+import { useState } from "react"
 
 //definir plantilla de datos para las coordenadas
 const Coord = z.object({
@@ -20,9 +21,18 @@ const Weather = z.object({
     })
 })
 // inferir el tipo para autocompletado a partir de la plantilla
-type Weather = z.infer<typeof Weather>
+export type Weather = z.infer<typeof Weather>
 
 export default function useWeather() {
+
+    const [weather, setWeather] = useState({
+        name: '',
+        main: {
+            temp: 0,
+            temp_max: 0,
+            temp_min: 0
+        }
+    })
 
     const fetchWeather = async (search: SearchType) => {
         // obteniendo el valor de la variable de entorno manejado por Vite
@@ -40,6 +50,7 @@ export default function useWeather() {
                 const result = Weather.safeParse(WeatherResult)
                 if (result.success) {
                     console.log(result.data.name)
+                    setWeather(result.data)
                 }
                 else
                     console.log('Respuesta malformada')
@@ -54,6 +65,7 @@ export default function useWeather() {
     }
 
     return {
+        weather,
         fetchWeather
     }
 }
