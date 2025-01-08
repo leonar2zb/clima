@@ -4,7 +4,9 @@ import { SearchType } from "../types"
 export default function useWeather() {
 
     const fetchWeather = async (search: SearchType) => {
-        const APIkey = '2739e5a3b5dd4b35c183cd484f3659b4'
+        // obteniendo el valor de la variable de entorno manejado por Vite
+        //de su fichero de configuración como por ejemplo ".env.local"
+        const APIkey = import.meta.env.VITE_API_KEY
         try {
             const geoUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${search.city},${search.country}&appid=${APIkey}`
             const { data } = await axios(geoUrl)
