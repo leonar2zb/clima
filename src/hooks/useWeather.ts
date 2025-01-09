@@ -52,14 +52,19 @@ export default function useWeather() {
                     console.log(result.data.name)
                     setWeather(result.data)
                 }
-                else
+                else {
                     console.log('Respuesta malformada')
+                    setWeather({ ...weather, name: '' })
+                }
             }
-            else
+            else {
                 console.log('No son coordenadas')
+                setWeather({ ...weather, name: '' })
+            }
 
         } catch (error) {
             console.log(error)
+            setWeather({ ...weather, name: '' })
         }
 
     }
