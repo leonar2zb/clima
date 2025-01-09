@@ -4,14 +4,16 @@ import useWeather from "./hooks/useWeather"
 import WeatherDetail from "./components/WeatherDetail/WeatherDetail"
 function App() {
 
-  const { weather, fetchWeather } = useWeather()
+  const { weather, fetchWeather, hasWeatherData } = useWeather()
 
   return (
     <>
       <h1 className={styles.title}>Buscador Clima</h1>
       <div className={styles.container}>
         <Form fetchWeather={fetchWeather} />
-        <WeatherDetail weather={weather} />
+        {hasWeatherData &&
+          <WeatherDetail weather={weather} />
+        }
       </div>
     </>
   )
