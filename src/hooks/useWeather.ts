@@ -25,20 +25,25 @@ export type Weather = z.infer<typeof Weather>
 
 export default function useWeather() {
 
-    const [weather, setWeather] = useState({
+    const initialState: Weather = {
         name: '',
         main: {
             temp: 0,
             temp_max: 0,
             temp_min: 0
         }
-    })
+    }
+
+    const [weather, setWeather] = useState(initialState)
 
     const [Loading, setLoading] = useState(false)
+    const [notFound, setNotFound] = useState(false)
     const fetchWeather = async (search: SearchType) => {
         // obteniendo el valor de la variable de entorno manejado por Vite
         //de su fichero de configuración como por ejemplo ".env.local"
         const APIkey = import.meta.env.VITE_API_KEY
+        setWeather(initialState)
+        setNotFound(false)
         try {
             setLoading(true)
             const geoUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${search.city},${search.country}&appid=${APIkey}`
@@ -51,22 +56,22 @@ export default function useWeather() {
 
                 const result = Weather.safeParse(WeatherResult)
                 if (result.success) {
-                    console.log(result.data.name)
                     setWeather(result.data)
                 }
                 else {
-                    console.log('Respuesta malformada')
-                    setWeather({ ...weather, name: '' })
+                    setWeather(initialState)
+                    setNotFound(true)
                 }
             }
             else {
-                console.log('No son coordenadas')
-                setWeather({ ...weather, name: '' })
+                setWeather(initialState)
+                setNotFound(true)
             }
 
         } catch (error) {
             console.log(error)
-            setWeather({ ...weather, name: '' })
+            setWeather(initialState)
+            setNotFound(true)
         } finally {
             setLoading(false)
         }
@@ -79,6 +84,7 @@ export default function useWeather() {
         weather,
         fetchWeather,
         Loading,
+        notFound,
         hasWeatherData
     }
 }
