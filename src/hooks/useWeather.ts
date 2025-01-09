@@ -46,7 +46,7 @@ export default function useWeather() {
         setNotFound(false)
         try {
             setLoading(true)
-            const geoUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${search.city},${search.country}&appid=${APIkey}`
+            const geoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${search.city},${search.country}&appid=${APIkey}`
             const { data } = await axios<Coord[]>(geoUrl)
             const resultCoord = Coord.safeParse(data[0])
             if (resultCoord.success) {
