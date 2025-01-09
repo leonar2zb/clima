@@ -34,11 +34,13 @@ export default function useWeather() {
         }
     })
 
+    const [Loading, setLoading] = useState(false)
     const fetchWeather = async (search: SearchType) => {
         // obteniendo el valor de la variable de entorno manejado por Vite
         //de su fichero de configuración como por ejemplo ".env.local"
         const APIkey = import.meta.env.VITE_API_KEY
         try {
+            setLoading(true)
             const geoUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${search.city},${search.country}&appid=${APIkey}`
             const { data } = await axios<Coord[]>(geoUrl)
             const resultCoord = Coord.safeParse(data[0])
@@ -65,6 +67,8 @@ export default function useWeather() {
         } catch (error) {
             console.log(error)
             setWeather({ ...weather, name: '' })
+        } finally {
+            setLoading(false)
         }
 
     }
@@ -74,6 +78,7 @@ export default function useWeather() {
     return {
         weather,
         fetchWeather,
+        Loading,
         hasWeatherData
     }
 }
